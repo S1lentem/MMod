@@ -19,7 +19,7 @@ def rayleigh_distribution(x, a):
     return (x/a**2)*exp(-x**2/(2*a**2))
 
 if __name__ == '__main__':
-    random_values = [GENERATOR.get_base_random_value() for _ in range(10000)]
+    random_values = [GENERATOR.next() for _ in range(10000)]
 
     plt.hist(random_values)
     plt.show()
@@ -38,8 +38,8 @@ if __name__ == '__main__':
     
     x2 = []
     for _ in range(1000000):
-        x_value = BEGIN + GENERATOR.get_base_random_value() * (END - BEGIN)
-        y_value = GENERATOR.get_base_random_value() * max_x
+        x_value = BEGIN + GENERATOR.next() * (END - BEGIN)
+        y_value = GENERATOR.next() * max_x
         print(x_value, y_value, rayleigh_distribution(x_value, A_PARAM))
         input()
         

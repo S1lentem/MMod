@@ -9,14 +9,14 @@ def projection(begin, end, M):
 
 class BaseRandomGeneretor:
     SEED = 1
-    K = 2**15
-    M = 3**10
+    K = 16807
+    M = 0x7fffffff
 
     def __init__(self):
         self.prev = self.SEED
     
     @projection(0, 1, M)
-    def get_base_random_value(self):
+    def next(self):
         self.prev = (self.K*self.prev) % self.M 
         return self.prev
 
