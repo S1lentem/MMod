@@ -3,7 +3,7 @@ import numpy as np
 
 import generators
 
-COUNT_NUMBER = 1000
+COUNT_NUMBER = 10000
 INTERVAL_COUNT = 10
 
 MATHEMATICAL_EXPECTATION = 1 / 2 
