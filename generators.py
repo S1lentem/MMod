@@ -16,6 +16,10 @@ class BaseRandomGeneretor:
     def reset(self):
         self.prev = self.SEED
 
+    def get_iterator(self, iteration_count):
+        for _ in range(iteration_count):
+            yield self.next()
+
 
 class ContinuousRandomNumberGenerator:
     def __init__(self, func):
@@ -32,4 +36,7 @@ class ContinuousRandomNumberGenerator:
 
     def func(self, x):
         return self.__func(x)
-        
+    
+    def get_iterator(self, count_iteration, b_x, b_y, a_x=0, a_y=0):
+        for _ in range(count_iteration):
+            yield self.next(b_x, b_y, a_x, a_y)

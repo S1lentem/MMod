@@ -3,8 +3,11 @@ import numpy as np
 
 import generators
 
-COUNT_NUMBER = 10000
-INTERVAL_COUNT = 10
+from math import sqrt
+
+COUNT_NUMBER = 10_000
+INTERVAL_COUNT = l = sqrt(COUNT_NUMBER) if COUNT_NUMBER <= 100 else 1 + log(COUNT_NUMBER, 2)
+
 
 MATHEMATICAL_EXPECTATION = 1 / 2 
 DESPERSION = 1 / 12
@@ -13,12 +16,10 @@ DESPERSION = 1 / 12
 if __name__ == '__main__':
     generator = generators.BaseRandomGeneretor()
 
-    random_values = [generator.next() for _ in range(COUNT_NUMBER)]
-
+    random_values = list(generator.get_iterator(COUNT_NUMBER))
     plt.hist(random_values)
     plt.show()
 
-    generator.reset()
     k_array = [[] for _ in range(INTERVAL_COUNT)]
     
     for value in random_values:
@@ -39,4 +40,4 @@ if __name__ == '__main__':
     R = 12 / (COUNT_NUMBER - step) * pair_sum
     print(R)
 
-        
+    a, b = 0, 0

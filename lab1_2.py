@@ -1,10 +1,10 @@
+import scipy.stats as st
 import matplotlib.pyplot as plt
 import numpy as np
 
-from math import exp, pi, sqrt
+from math import exp, pi, sqrt, log
 from generators import ContinuousRandomNumberGenerator       
 from scipy.optimize import fmin_l_bfgs_b
-
 
 A_PARAM = 2
 def rayleign_distribution(x):
@@ -39,7 +39,8 @@ if __name__ == '__main__':
     plt.plot(all_x, all_y)
     plt.show()
 
-    values = [generator.next(b, max_y) for _ in range(COUNT)]
+
+    values =list(generator.get_iterator(COUNT, b, max_y))
 
     M = sum(values) / COUNT
     D = sum(value**2 - (M**2) for value in values) / COUNT
@@ -52,3 +53,5 @@ if __name__ == '__main__':
 
     plt.hist(values)
     plt.show()
+
+    l = sqrt(COUNT) if COUNT <= 100 else 1 + log(COUNT, 2)
