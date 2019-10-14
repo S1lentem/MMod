@@ -1,6 +1,3 @@
-
-
-
 class BaseRandomGeneretor:
     SEED = 1
     K = 16807
@@ -40,3 +37,26 @@ class ContinuousRandomNumberGenerator:
     def get_iterator(self, count_iteration, b_x, b_y, a_x=0, a_y=0):
         for _ in range(count_iteration):
             yield self.next(b_x, b_y, a_x, a_y)
+
+
+class DiscreteRandomGenerator:
+    def __init__(self, distribution):
+        self.__generator = BaseRandomGeneretor()
+        self.__distribution = distribution
+        self.__interval = [0]
+
+        for value in distribution:
+            self.__interval.append(self.__interval[-1], value[-1])
+
+    def reset(self):
+        self.__generator.reset()
+
+    def __get_discret_value(self, value):
+        for i in range(len(self.__interval) - 1):
+            if value >= self.__interval[i] and value < self.__interval[i+1]:
+                return self.__distribution[i][0]
+    
+    def next(self):
+        value = self.__generator.next()
+        return self.__get_discret_value(value)
+
