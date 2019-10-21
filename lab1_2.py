@@ -10,7 +10,7 @@ from scipy.optimize import fmin_l_bfgs_b
 from scipy.stats import chi2
 
 
-A_PARAM = 4
+A_PARAM = 2
 
 
 def rayleign_distribution(x):
@@ -39,8 +39,6 @@ def get_end_point_for_y(func, a, b):
                                 approx_grad=True)[0][0]
     return func(x_for_max_y)
 
-<<<<<<< HEAD
-=======
 def pearson_consent(a, b, count, values):
     intervals = [[i, []] for i in np.arange(a, b, (b-a)/count)] + [[float(b), []]]
     
@@ -62,8 +60,8 @@ def chi_2(interval, theory_func, item_count):
         e = theory_func(temp)
 
         result += (o - e)**2 / e
->>>>>>> 3bb64add4ea7652bf54ef0101fd02566dda9f5ad
 
+    return result
 
 if __name__ == '__main__':
     step = 3
@@ -87,9 +85,8 @@ if __name__ == '__main__':
     test_m = sqrt(pi/2)*A_PARAM
     test_d = (2 - pi/2)*A_PARAM**2
 
-    print('Len)')
     print('M) ', M, test_m)
-    print('D) ', test_d)
+    print('D) ', D, test_d)
     print('R) ', R)
 
     plt.plot(all_x, all_y)
@@ -101,11 +98,16 @@ if __name__ == '__main__':
     intervals = pearson_consent(A, b, l, values)
 
     chi_2_value = chi_2(intervals, rayleign_func, COUNT)
-    print(chi_2_value)
+    chi_2_theory = chi2.ppf(0.99, COUNT - 1)
+    print(f'{chi_2_value} < {chi_2_theory}')
 
-    c1 = chi2.pdf((1-DELTA)/2, COUNT - 3)
-    c2 = chi2.pdf((1+DELTA)/2, COUNT - 3)
+
+    d = sum([(value - M)**2 for value in values]) / (COUNT - 1)
+    S = sqrt(d)
+
+    k = S* chi2.ppf(0.99, COUNT-3) / sqrt(COUNT-1)
+
+    c1 = COUNT * d / chi2.isf((1-0.99)/2, COUNT-1) 
+    c2 = COUNT * d / chi2.isf((1+0.99)/2, COUNT-1)
     
-    left = (l - 1)*D/c1
-    right = (l - 1)*D/c2
-    print(left, D, right)
+    print(f'{c1} < {D} < {c2}')
