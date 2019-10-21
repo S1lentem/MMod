@@ -9,14 +9,22 @@ from scipy.optimize import fmin_l_bfgs_b
 from scipy.stats import chi2
 
 
-A_PARAM = 2
+A_PARAM = 4
+
+
 def rayleign_distribution(x):
-    return (x/A_PARAM**2)*exp(-x**2/(2*A_PARAM**2))
+    return (x/A_PARAM**2)*exp(-(x**2)/(2*A_PARAM**2))
+
+def rayleign_func(x):
+    return (1-exp(-(x**2)/(2*A_PARAM**2)))
+
+    
 
 A = 0
 B = 8
 STEP = 0.1
-COUNT = 10_000
+COUNT = 1_000_000
+DELTA = 0.99
 
 def get_end_point_for_x(func, start_point, eps=0.0001, step=0.1):
     b = start_point + step
@@ -50,41 +58,51 @@ def chi_2(interval, theory_func, item_count):
         temp = item[0] + interval[i+1][0] / 2
         e = theory_func(temp)
 
-        result += (o + e)**2 / e
+        result += (o - e)**2 / e
 
     return result
 
 if __name__ == '__main__':
-    generator = ContinuousRandomNumberGenerator(rayleign_distribution)
+    step = 3
     
     b = get_end_point_for_x(rayleign_distribution, A)
     max_y = get_end_point_for_y(rayleign_distribution, A, b)
+
+    generator = ContinuousRandomNumberGenerator(rayleign_distribution, max_y)
      
     all_x = np.arange(A, b, STEP)
     all_y = [rayleign_distribution(x) for x in all_x]
-
-    plt.plot(all_x, all_y)
-    plt.show()
-
 
     values =list(generator.get_iterator(COUNT, b, max_y))
 
     M = sum(values) / COUNT
     D = sum(value**2 - (M**2) for value in values) / COUNT
     
+    Mxy = sum(val * values[i+step] for i, val in enumerate(values[:-step])) / (COUNT - step)
+    R = (Mxy - M**2)/D
+
     test_m = sqrt(pi/2)*A_PARAM
     test_d = (2 - pi/2)*A_PARAM**2
 
-    print(M, test_m)
-    print(D, test_d)
+    print('Len)')
+    print('M) ', M, test_m)
+    print('D) ', test_d)
+    print('R) ', R)
 
-    plt.hist(values)
+    plt.plot(all_x, all_y)
+    plt.hist(values, weights=np.zeros_like(values) + 1. / len(values))
     plt.show()
 
     l = sqrt(COUNT) if COUNT <= 100 else 1 + log(COUNT, 2)
 
-
     intervals = pearson_consent(A, b, l, values)
 
-    chi_2_value = chi_2(intervals, rayleign_distribution, COUNT)
+    chi_2_value = chi_2(intervals, rayleign_func, COUNT)
     print(chi_2_value)
+
+    c1 = chi2.pdf((1-DELTA)/2, COUNT - 3)
+    c2 = chi2.pdf((1+DELTA)/2, COUNT - 3)
+    
+    left = (l - 1)*D/c1
+    right = (l - 1)*D/c2
+    print(left, D, right)
