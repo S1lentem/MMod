@@ -41,9 +41,8 @@ class ContinuousRandomNumberGenerator:
     def next(self, b_x, b_y, a_x=0, a_y=0):
         while True:
             x_value = a_x + (b_x - a_x) * self.__generator.next()
-            # y_value = a_y + (b_y - a_y) * self.__generator.next()
             y_value = self.__max_y * self.__generator.next()
-            if self.__func(x_value) > y_value:
+            if self.__func(x_value) >= y_value:
                 return x_value
 
 
