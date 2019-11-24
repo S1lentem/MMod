@@ -9,8 +9,7 @@ from math import exp, pi, sqrt, log
 from scipy.optimize import fmin_l_bfgs_b
 from scipy.stats import chi2
 
-
-A_PARAM = 4
+A_PARAM = 5
 A = 0
 COUNT = 1_000_000
 STEP = 0.1
@@ -20,6 +19,10 @@ def rayleign_distribution(x):
 
 def rayleign_func(x):
     return (1-exp(-(x**2)/(2*A_PARAM**2)))
+
+
+def f_inv(x): 
+    return A_PARAM * sqrt(-2 * log(x)) if x != 0 else 0
 
 
 def get_end_point_for_x(func, start_point, eps=0.0001, step=0.1):
@@ -39,7 +42,8 @@ if __name__ == '__main__':
     b = get_end_point_for_x(rayleign_distribution, A)
     max_y = get_end_point_for_y(rayleign_distribution, A, b)
 
-    generator = ContinuousRandomNumberGenerator(rayleign_distribution, max_y)
+    generator = ContinuousRandomNumberGenerator(rayleign_distribution, max_y,
+                                                inv=f_inv)
      
     all_x = np.arange(A, b, STEP)
     all_y = [rayleign_distribution(x) for x in all_x]
@@ -58,6 +62,8 @@ if __name__ == '__main__':
     print('R) ', R)
 
     plt.plot(all_x, all_y)
+    plt.show()
+
     plt.hist(values, weights=np.zeros_like(values) + 1. / len(values), bins=20)
     plt.show()
 

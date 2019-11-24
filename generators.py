@@ -24,23 +24,27 @@ class BaseRandomGeneretor:
         for _ in range(iteration_count):
             yield self.next()
 
-
+    
 
 
 class ContinuousRandomNumberGenerator:
-    def __init__(self, func, max_y):
+    def __init__(self, func, max_y, inv=None):
         self.__generator = BaseRandomGeneretor()
         self.__func = func
         self.__max_y = max_y
+        self.__inv = inv
 
 
     def reset(self):
         self.__generator.reset()
 
 
-    def next(self, b_x, b_y, a_x=0, a_y=0):
+    def next(self, b_x, b_y=None, a_x=0, a_y=0):
+        if self.__inv:
+            return self.__inv(self.__generator.next())
+
         while True:
-            x_value = a_x + (b_x - a_x) * self.__generator.next()
+            x_value = a_x + (b_x - a_x)*self.__generator.next()
             y_value = self.__max_y * self.__generator.next()
             if self.__func(x_value) >= y_value:
                 return x_value

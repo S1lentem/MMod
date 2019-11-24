@@ -1,29 +1,55 @@
-from generators import DiscreteRandomGenerator2
-
+import itertools
 import matplotlib.pyplot as plt
+import numpy as np
 
-DISTRIBUTION = [(1, 0.25), (3, 0.25), (5, 0.1), (6, 0.1),
-                (7, 0.2), (8, 0.05), (10, 0.05)]
+from math import sqrt, log
+
+from generators import DiscreteRandomGenerator
+from funcs import *
 
 COUNT = 100_000
 
+GEOMETRIC_DISTRIBUTION = {
+    'func': lambda p, q, i: q**i*p,
+    'args': {
+        'p': 0.6,
+        'q': 0.4
+    }
+}
+
 if __name__ == '__main__':
-    generator = DiscreteRandomGenerator2(DISTRIBUTION)
+    all_x = range(20)
+    generator = DiscreteRandomGenerator(range(20), 
+                                        GEOMETRIC_DISTRIBUTION['func'],
+                                        **GEOMETRIC_DISTRIBUTION['args'])
 
-    values = list(generator.get_iterator(COUNT))
+    values = [generator.next() for _ in range(COUNT)]
 
-    plt.hist(values)
+    all_y = [GEOMETRIC_DISTRIBUTION['func'](i=x, **GEOMETRIC_DISTRIBUTION['args']) 
+             for x in all_x]
+
+    plt.plot(all_x, all_y)
+    plt.hist(values, weights=np.zeros_like(values) + 1/len(values), bins=20)
     plt.show()
 
-    M = sum(values) / COUNT
-    D = sum(value**2 - M**2 for value in values) / COUNT
+    M = get_assessment_of_mathematical_expectation(values, COUNT)
+    D = get_variance_estimate(values, M, COUNT)
+    R = get_correlation(values, M, D, COUNT)
 
-    theory_m = sum(i[0]*i[1] for i in DISTRIBUTION)
-    theory_d = sum(i[1]*(i[0] - theory_m)**2 for i in DISTRIBUTION)
-    print(M, theory_m)
-    print(D, theory_d)
+    test_m = GEOMETRIC_DISTRIBUTION['args']['q']/GEOMETRIC_DISTRIBUTION['args']['p']
+    test_d = GEOMETRIC_DISTRIBUTION['args']['q']/GEOMETRIC_DISTRIBUTION['args']['p']**2
 
-    step = 2
-    pair_sum = sum(values[i]*values[i+step] for i in range(len(values)-step))
-    R = 12/(COUNT - step)*pair_sum
-    print(R)
+    print('M) ', M, test_m)
+    print('D) ', D, test_d)
+    print('R) ', R)
+
+    a = len(set(values))
+    chi_2_value = 0
+    for i in range(a):
+        e = GEOMETRIC_DISTRIBUTION['func'](i=i, **GEOMETRIC_DISTRIBUTION['args']) * COUNT
+        o = count(values, i)
+
+        chi_2_value += (o - e)**2 / e
+
+    chi_2_theory = chi2.ppf(0.99, a - 3)
+    print(f'Pirson) {chi_2_value} < {chi_2_theory}')

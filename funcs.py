@@ -15,6 +15,8 @@ def get_intervals(a, b, count, values):
     return intervals
 
 
+
+
 def pearson_criterion(interval, theory_func, item_count, q=0.99):
 
     result = 0
@@ -59,3 +61,22 @@ def get_interval_assessment(values, M=None, count=None):
     c2 = count * d / chi2.isf((1+0.99)/2, count-1)
 
     return c1, c2
+
+def get_interval_assessment_M(values, count=None):
+    count = count if count is not None else len(values)
+
+    m = sum(values) / count
+    d = sum([(value - m)**2 for value in values]) / (count - 1)
+    s = sqrt(d)
+
+    k = s * chi2.ppf(0.99, count-3)
+
+    return m-k, m, m+k
+
+    
+
+def count(enumerable, item):
+    result = 0
+    for i in enumerable:
+        result = result + 1 if i == item else result
+    return result
