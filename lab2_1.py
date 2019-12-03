@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn
 
 from scipy.optimize import fmin_l_bfgs_b
+from math import sqrt
 
 from generators import ContinuousRandomNumberGenerator, BaseRandomGeneretor
 from lab1_2 import get_end_point_for_y
@@ -12,14 +13,11 @@ from pandas import DataFrame
 A = 0
 B = 1
 STEP = 0.05
-N = 100_000
+N = 10_000
 BIN = 10
 
 M1_THEORY = 9/14
-D1_THEORY = 5/7 - (9/14)**2
-
-def is_seccess_constraint(value):
-    return value >= 0 and value <= 1
+D1_THEORY = 1/7*(12/5 + 1) - (9/14)**2
 
 def f_xy(x, y):
     return 12/7*(x**2 + y/2)
@@ -28,19 +26,13 @@ def f_x(x):
     return (12*x**2 + 3)/7 
 
 def f_y_x(x, y):
-    return f_xy(x, y) / f_x(x)
+    return f_xy(x, y)/f_x(x)
     
-def f_x_inv(x):
-    return ((7*x - 3)/12)**0.5
-
 def f_y(y):
     return (4 + 6*y)/7
 
-def f_y_inv(y):
-    return (7*y - 4)/6
-
-
-
+def f_x_y(y, x):
+    return f_xy(x, y)/f_y(y) 
 
 class Generator2D:
 
@@ -85,12 +77,10 @@ class Generator2D:
             yield self.next()
 
 
-        
-if __name__ == '__main__':
-    generator = Generator2D(f_x, f_y_x, A, B)
-    
-    values = list(zip(*generator.get_iterator(N)))
+def analyze(f1, f2, A, B, n):
+    generator = Generator2D(f1, f2, A, B)
 
+    values = tuple(zip(*generator.get_iterator(n)))
     x_range = np.arange(A, B, 0.05)
     y_range = [f_x(x) for x in x_range]
 
@@ -100,7 +90,40 @@ if __name__ == '__main__':
     plt.hist(values[0], 20, weights=np.zeros_like(values[0]) + 1./N)
     plt.show()
     
-    m1 = sum(values[0]) / N
-    d1 = sum(value**2 - (M1_THEORY**2) for value in values[0])
-    print(M1_THEORY, m1)
-    print(D1_THEORY, d1)
+    m1 = sum(values[0])/N
+    d1 = sum((value - m1)**2 for value in values[0])/(N + 1)
+    
+    # y_range = []
+
+    # num = 20
+    # y_range = [f_y_x(values[0][num*i], val) for i, val in enumerate(np.linspace(A, B, num=num))]
+    
+    # plt.subplot(1, 2, 1)
+    # plt.plot(np.linspace(A, B, num=num), y_range)
+    # plt.subplot(1, 2, 2)
+    # plt.hist(values[1], 20, weights=np.zeros_like(values[1]) + 1./N)
+    # plt.show()
+
+    m2 = sum(values[1])/N
+    d2 = sum((value - m2)**2 for value in values[1])/(N + 1)
+
+    # print(m2)
+    # print(d2)
+
+    cov = sum(val[0]*val[1] - m1*m2 for val in values)
+    cor = sum((val[0]-m1)*(val[1]-m2) for val in values) / sqrt(d1*d2)
+    # print(cov)
+    # print(cor)
+
+    return (m1, d1, m2, d2, cov, cor)
+    
+
+if __name__ == '__main__':
+    m1_1, d1_1, m2_1, d2_1, cov_1, cor_1 = analyze(f_x, f_y_x, A, B, N)
+    
+    print('M)', M1_THEORY, m1_1)
+    print('D)', D1_THEORY, d1_1)
+
+    
+    m1_2, d1_2, m2_2, d2_2, cov_2, cor_2 = analyze(f_y, f_x_y, A, B, N)
+    print(cor_1, '=', cor_2)
