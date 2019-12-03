@@ -17,7 +17,10 @@ N = 10_000
 BIN = 10
 
 M1_THEORY = 9/14
-D1_THEORY = 1/7*(12/5 + 1) - (9/14)**2
+D1_THEORY = 1/7*(12/5 + 1) - M1_THEORY**2
+
+M2_THEORY = 4/7
+D2_THEORY = 3/14 + 4/21 - M2_THEORY**2
 
 def f_xy(x, y):
     return 12/7*(x**2 + y/2)
@@ -82,7 +85,7 @@ def analyze(f1, f2, A, B, n):
 
     values = tuple(zip(*generator.get_iterator(n)))
     x_range = np.arange(A, B, 0.05)
-    y_range = [f_x(x) for x in x_range]
+    y_range = [f1(x) for x in x_range]
 
     plt.subplot(1, 2, 1)
     plt.plot(x_range, y_range)
@@ -93,37 +96,31 @@ def analyze(f1, f2, A, B, n):
     m1 = sum(values[0])/N
     d1 = sum((value - m1)**2 for value in values[0])/(N + 1)
     
-    # y_range = []
-
-    # num = 20
-    # y_range = [f_y_x(values[0][num*i], val) for i, val in enumerate(np.linspace(A, B, num=num))]
-    
-    # plt.subplot(1, 2, 1)
-    # plt.plot(np.linspace(A, B, num=num), y_range)
-    # plt.subplot(1, 2, 2)
-    # plt.hist(values[1], 20, weights=np.zeros_like(values[1]) + 1./N)
-    # plt.show()
 
     m2 = sum(values[1])/N
     d2 = sum((value - m2)**2 for value in values[1])/(N + 1)
 
-    # print(m2)
-    # print(d2)
 
     cov = sum(val[0]*val[1] - m1*m2 for val in values)
     cor = sum((val[0]-m1)*(val[1]-m2) for val in values) / sqrt(d1*d2)
-    # print(cov)
-    # print(cor)
 
-    return (m1, d1, m2, d2, cov, cor)
+
+    return ((m1, m2), (d1, d2), cov, cor)
     
 
 if __name__ == '__main__':
-    m1_1, d1_1, m2_1, d2_1, cov_1, cor_1 = analyze(f_x, f_y_x, A, B, N)
+    m1, d1, cov_1, cor_1 = analyze(f_x, f_y_x, A, B, N)
     
-    print('M)', M1_THEORY, m1_1)
-    print('D)', D1_THEORY, d1_1)
+    print('M)', M1_THEORY, m1[0])
+    print('D)', D1_THEORY, d1[0])
 
     
-    m1_2, d1_2, m2_2, d2_2, cov_2, cor_2 = analyze(f_y, f_x_y, A, B, N)
+    m2, d2, cov_2, cor_2 = analyze(f_y, f_x_y, A, B, N)
+    
+
+    print('M)', M2_THEORY, m2[0])
+    print('D)', D2_THEORY, d2[0])
+
+
     print(cor_1, '=', cor_2)
+    print(cov_1, '=', cov_2)

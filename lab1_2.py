@@ -61,11 +61,7 @@ if __name__ == '__main__':
     print('D) ', D, test_d)
     print('R) ', R)
 
-    plt.plot(all_x, all_y)
-    plt.show()
-
-    plt.hist(values, weights=np.zeros_like(values) + 1. / len(values), bins=20)
-    plt.show()
+   
 
     l = sqrt(COUNT) if COUNT <= 100 else 1 + log(COUNT, 2)
     intervals = get_intervals(A, b, l, values)
