@@ -99,209 +99,209 @@ class MclarenMarclesGenerator:
 ###############################################################################
 print('TASK A')
 
-congruentGenerator = CongruentGenerator(prog_seed, uint16_t_MAX, int32_t_MAX)
+# congruentGenerator = CongruentGenerator(prog_seed, uint16_t_MAX, int32_t_MAX)
 
 
-class GeneratorCRV2D:
-    def __init__(self):
-        self.generator = CongruentGenerator(prog_seed, uint16_t_MAX, int32_t_MAX)
+# class GeneratorCRV2D:
+#     def __init__(self):
+#         self.generator = CongruentGenerator(prog_seed, uint16_t_MAX, int32_t_MAX)
     
-    def generateValue(self):
-        x = self.generator.generate_value()
-        y = self.generator.generate_value()
-        X = inverse_function_of_x(x)
-        Y = inverse_function_of_y_x(y, X)
-        return X, Y
+#     def generateValue(self):
+#         x = self.generator.generate_value()
+#         y = self.generator.generate_value()
+#         X = inverse_function_of_x(x)
+#         Y = inverse_function_of_y_x(y, X)
+#         return X, Y
 
 
-# simple density and function plots for check
+# # simple density and function plots for check
         
-x = np.linspace(0, np.pi / 2, 1000)
-plt.plot(x, list(map(density_of_x, x)), color='g')
-plt.ylabel('x density: ')
-plt.show()
+# x = np.linspace(0, np.pi / 2, 1000)
+# plt.plot(x, list(map(density_of_x, x)), color='g')
+# plt.ylabel('x density: ')
+# plt.show()
 
-x = np.linspace(0, np.pi / 2, 1000)
-plt.plot(x, list(map(function_of_x, x)), color='g')
-plt.ylabel('x function: ')
-plt.show()
+# x = np.linspace(0, np.pi / 2, 1000)
+# plt.plot(x, list(map(function_of_x, x)), color='g')
+# plt.ylabel('x function: ')
+# plt.show()
 
-x = np.linspace(0, 1, 1000)
-plt.plot(x, list(map(inverse_function_of_x, x)), color='g')
-plt.ylabel('x inverse function: ')
-plt.show()
+# x = np.linspace(0, 1, 1000)
+# plt.plot(x, list(map(inverse_function_of_x, x)), color='g')
+# plt.ylabel('x inverse function: ')
+# plt.show()
 
-x = np.linspace(0, np.pi / 2, 1000)
-plt.plot(x, list(map(density_of_y_x, x, [np.pi/2 for x in x])), color='g')
-plt.ylabel('y_x density (x = pi/2): ')
-plt.show()
+# x = np.linspace(0, np.pi / 2, 1000)
+# plt.plot(x, list(map(density_of_y_x, x, [np.pi/2 for x in x])), color='g')
+# plt.ylabel('y_x density (x = pi/2): ')
+# plt.show()
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-X = np.linspace(0, np.pi / 2, 50)
-Y = np.linspace(0, np.pi / 2, 50)
-X, Y = np.meshgrid(X, Y)
-Z = density_of_y_x(Y, X)
-surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# X = np.linspace(0, np.pi / 2, 50)
+# Y = np.linspace(0, np.pi / 2, 50)
+# X, Y = np.meshgrid(X, Y)
+# Z = density_of_y_x(Y, X)
+# surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+#                        linewidth=0, antialiased=False)
 
-ax.set_zlim(0, 1.0)
-fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
-
-
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-X = np.linspace(0, np.pi / 2, 50)
-Y = np.linspace(0, np.pi / 2, 50)
-X, Y = np.meshgrid(X, Y)
-Z = function_of_y_x(Y, X)
-surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
-
-ax.set_zlim(0.0, 1.0)
-fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
+# ax.set_zlim(0, 1.0)
+# fig.colorbar(surf, shrink=0.5, aspect=5)
+# plt.show()
 
 
-x = np.linspace(0, np.pi / 2, 1000)
-plt.plot(x, list(map(function_of_y_x, x, [np.pi/2 for x in x])), color='g')
-plt.ylabel('y|x function (x = pi/2): ')
-plt.show()
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# X = np.linspace(0, np.pi / 2, 50)
+# Y = np.linspace(0, np.pi / 2, 50)
+# X, Y = np.meshgrid(X, Y)
+# Z = function_of_y_x(Y, X)
+# surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+#                        linewidth=0, antialiased=False)
 
-x = np.linspace(0, 1, 1000)
-plt.plot(x, list(map(inverse_function_of_y_x, x, [np.pi/2 for x in x])), color='g')
-plt.ylabel('y|x inverse function (x = pi/2): ')
-plt.show()
+# ax.set_zlim(0.0, 1.0)
+# fig.colorbar(surf, shrink=0.5, aspect=5)
+# plt.show()
 
 
-# generating 2d CRV and checking them
-# TOOD: make larger
-dataset_len = 10000
-generator = GeneratorCRV2D()
-dataset = [generator.generateValue() for _ in range(dataset_len)]
-zipped_data = list(zip(*dataset))
+# x = np.linspace(0, np.pi / 2, 1000)
+# plt.plot(x, list(map(function_of_y_x, x, [np.pi/2 for x in x])), color='g')
+# plt.ylabel('y|x function (x = pi/2): ')
+# plt.show()
 
-sns.jointplot(x=zipped_data[0],
-              y=zipped_data[1], 
-              kind="kde", 
-              space=0)
-print('show')
-plt.show()
+# x = np.linspace(0, 1, 1000)
+# plt.plot(x, list(map(inverse_function_of_y_x, x, [np.pi/2 for x in x])), color='g')
+# plt.ylabel('y|x inverse function (x = pi/2): ')
+# plt.show()
 
-dataset_len = 1000000
-generator = GeneratorCRV2D()
-dataset = [generator.generateValue() for _ in range(dataset_len)]
-zipped_data = list(zip(*dataset))
-frequency = defaultdict(int)
-bin_len = 0.16
-for x, y in dataset: 
-    frequency[(int(x//bin_len), int(y//bin_len))]+=1/dataset_len
+
+# # generating 2d CRV and checking them
+# # TOOD: make larger
+# dataset_len = 10000
+# generator = GeneratorCRV2D()
+# dataset = [generator.generateValue() for _ in range(dataset_len)]
+# zipped_data = list(zip(*dataset))
+
+# sns.jointplot(x=zipped_data[0],
+#               y=zipped_data[1], 
+#               kind="kde", 
+#               space=0)
+# print('show')
+# plt.show()
+
+# dataset_len = 1000000
+# generator = GeneratorCRV2D()
+# dataset = [generator.generateValue() for _ in range(dataset_len)]
+# zipped_data = list(zip(*dataset))
+# frequency = defaultdict(int)
+# bin_len = 0.16
+# for x, y in dataset: 
+#     frequency[(int(x//bin_len), int(y//bin_len))]+=1/dataset_len
     
-heat_map = []
-previous_x = -1
-for x, y in sorted(frequency.keys()):
-    if previous_x != x:
-        heat_map.append([])
-        previous_x = x
-    heat_map[x].append(frequency[(y, x)])
+# heat_map = []
+# previous_x = -1
+# for x, y in sorted(frequency.keys()):
+#     if previous_x != x:
+#         heat_map.append([])
+#         previous_x = x
+#     heat_map[x].append(frequency[(y, x)])
 
-frameData = DataFrame(heat_map)
-sns.heatmap(data=frameData)
-plt.show()
+# frameData = DataFrame(heat_map)
+# sns.heatmap(data=frameData)
+# plt.show()
 
-sns.distplot(zipped_data[0], bins=10, kde=False, norm_hist=True)
-x = np.linspace(0, np.pi / 2, 1000)
-frameData = DataFrame(data={'x': x, 'y': [density_of_x(val) for val in x]})
-sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
-plt.show()
-
-
-sns.distplot([inverse_function_of_y_x(congruentGenerator.generate_value(), np.pi/2) for i in range(dataset_len)], 
-              bins=10, kde=False, norm_hist=True)
-x = np.linspace(0, np.pi / 2, 1000)
-frameData = DataFrame(data={'x': x, 'y': [density_of_y_x(val, np.pi/2) for val in x]})
-sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
-plt.show()
-
-theoretical_math_e_x = np.pi / 4
-sns.distplot(zipped_data[1], bins=10, kde=False, norm_hist=True)
-x = np.linspace(0, np.pi / 2, 1000)
-frameData = DataFrame(data={'x': x, 'y': [density_of_y_x(val, theoretical_math_e_x) for val in x]})
-sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
-plt.show()
-
-# Practical data
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-x = zipped_data[0]
-y = zipped_data[1]
-hist, xedges, yedges = np.histogram2d(x, y, bins=32, range=[[0, np.pi / 2], [0, np.pi / 2]], density=True)
-
-# Construct arrays for the anchor positions of the 16 bars.
-xpos, ypos = np.meshgrid(xedges[:-1] + 0.25, yedges[:-1] + 0.25, indexing="ij")
-xpos = xpos.ravel()
-ypos = ypos.ravel()
-zpos = 0
-
-# Construct arrays with the dimensions for the 16 bars.
-dx = dy = 0.5 * np.ones_like(zpos)
-dz = hist.ravel()
-
-ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average')
-
-plt.show()
+# sns.distplot(zipped_data[0], bins=10, kde=False, norm_hist=True)
+# x = np.linspace(0, np.pi / 2, 1000)
+# frameData = DataFrame(data={'x': x, 'y': [density_of_x(val) for val in x]})
+# sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
+# plt.show()
 
 
-# Theoretical data
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-X = np.linspace(0, np.pi / 2, 50)
-Y = np.linspace(0, np.pi / 2, 50)
-X, Y = np.meshgrid(X, Y)
-Z = density_of_xy(X, Y)
-surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
+# sns.distplot([inverse_function_of_y_x(congruentGenerator.generate_value(), np.pi/2) for i in range(dataset_len)], 
+#               bins=10, kde=False, norm_hist=True)
+# x = np.linspace(0, np.pi / 2, 1000)
+# frameData = DataFrame(data={'x': x, 'y': [density_of_y_x(val, np.pi/2) for val in x]})
+# sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
+# plt.show()
 
-plt.show()
+# theoretical_math_e_x = np.pi / 4
+# sns.distplot(zipped_data[1], bins=10, kde=False, norm_hist=True)
+# x = np.linspace(0, np.pi / 2, 1000)
+# frameData = DataFrame(data={'x': x, 'y': [density_of_y_x(val, theoretical_math_e_x) for val in x]})
+# sns.lineplot(x='x', y='y', data=frameData, palette="ch:2.5,.25")
+# plt.show()
 
-theoretical_math_e_x = np.pi / 4
-theoretical_math_e_y = (1 / 2 * (np.pi - 2) * np.sin(theoretical_math_e_x) + np.cos(theoretical_math_e_x)) / (np.sin(theoretical_math_e_x) + np.cos(theoretical_math_e_x))
+# # Practical data
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
+# x = zipped_data[0]
+# y = zipped_data[1]
+# hist, xedges, yedges = np.histogram2d(x, y, bins=32, range=[[0, np.pi / 2], [0, np.pi / 2]], density=True)
 
-x = zipped_data[0]
-y = zipped_data[1]
+# # Construct arrays for the anchor positions of the 16 bars.
+# xpos, ypos = np.meshgrid(xedges[:-1] + 0.25, yedges[:-1] + 0.25, indexing="ij")
+# xpos = xpos.ravel()
+# ypos = ypos.ravel()
+# zpos = 0
 
-practical_math_e_x = sum(x) / len(x)
-practical_math_e_y = sum(y) / len(y)
+# # Construct arrays with the dimensions for the 16 bars.
+# dx = dy = 0.5 * np.ones_like(zpos)
+# dz = hist.ravel()
 
-print('Math exp:')
-print('X:')
-print('theoretical_math_e_x:', theoretical_math_e_x)
-print('practical_math_e_x:', practical_math_e_x)
-print('Y:')
-print('theoretical_math_e_y:', theoretical_math_e_y)
-print('practical_math_e_y:', practical_math_e_y)
+# ax.bar3d(xpos, ypos, zpos, dx, dy, dz, zsort='average')
 
-theoretical_dispersion_x = 1 / 16 * (-32 + 8 * np.pi + np.pi ** 2)
-theoretical_dispersion_y = 1 / 16 * (-32 + 8 * np.pi + np.pi ** 2)
-practical_dispersion_x = sum([(practical_math_e_x - item) ** 2 for item in x]) / (len(x) - 1)
-practical_dispersion_y = sum([(practical_math_e_y - item) ** 2 for item in y]) / (len(y) - 1)
+# plt.show()
 
-print('\nDispersion:')
-print('X:')
-print('theoretical_dispersion_x:', theoretical_dispersion_x)
-print('practical_dispersion_x:', practical_dispersion_x)
-print('Y:')
-print('theoretical_dispersion_y:', theoretical_dispersion_y)
-print('practical_dispersion_y:', practical_dispersion_y)
 
-corellation_coeff_theoretical = ((np.pi - 2) / 2 - theoretical_math_e_x * theoretical_math_e_y) / np.sqrt(theoretical_dispersion_y * theoretical_dispersion_x)
-corellation_coeff_practical = sum([(_x - practical_math_e_x) * (_y - practical_math_e_y) for _x, _y in dataset]) / dataset_len
-corellation_coeff_practical /= (np.sqrt(practical_dispersion_x) * np.sqrt(practical_dispersion_y))
+# # Theoretical data
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# X = np.linspace(0, np.pi / 2, 50)
+# Y = np.linspace(0, np.pi / 2, 50)
+# X, Y = np.meshgrid(X, Y)
+# Z = density_of_xy(X, Y)
+# surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+#                        linewidth=0, antialiased=False)
 
-print('\nCorellation coeff:')
-print('theoretical', corellation_coeff_theoretical)
-print('practical', corellation_coeff_practical)
+# plt.show()
+
+# theoretical_math_e_x = np.pi / 4
+# theoretical_math_e_y = (1 / 2 * (np.pi - 2) * np.sin(theoretical_math_e_x) + np.cos(theoretical_math_e_x)) / (np.sin(theoretical_math_e_x) + np.cos(theoretical_math_e_x))
+
+# x = zipped_data[0]
+# y = zipped_data[1]
+
+# practical_math_e_x = sum(x) / len(x)
+# practical_math_e_y = sum(y) / len(y)
+
+# print('Math exp:')
+# print('X:')
+# print('theoretical_math_e_x:', theoretical_math_e_x)
+# print('practical_math_e_x:', practical_math_e_x)
+# print('Y:')
+# print('theoretical_math_e_y:', theoretical_math_e_y)
+# print('practical_math_e_y:', practical_math_e_y)
+
+# theoretical_dispersion_x = 1 / 16 * (-32 + 8 * np.pi + np.pi ** 2)
+# theoretical_dispersion_y = 1 / 16 * (-32 + 8 * np.pi + np.pi ** 2)
+# practical_dispersion_x = sum([(practical_math_e_x - item) ** 2 for item in x]) / (len(x) - 1)
+# practical_dispersion_y = sum([(practical_math_e_y - item) ** 2 for item in y]) / (len(y) - 1)
+
+# print('\nDispersion:')
+# print('X:')
+# print('theoretical_dispersion_x:', theoretical_dispersion_x)
+# print('practical_dispersion_x:', practical_dispersion_x)
+# print('Y:')
+# print('theoretical_dispersion_y:', theoretical_dispersion_y)
+# print('practical_dispersion_y:', practical_dispersion_y)
+
+# corellation_coeff_theoretical = ((np.pi - 2) / 2 - theoretical_math_e_x * theoretical_math_e_y) / np.sqrt(theoretical_dispersion_y * theoretical_dispersion_x)
+# corellation_coeff_practical = sum([(_x - practical_math_e_x) * (_y - practical_math_e_y) for _x, _y in dataset]) / dataset_len
+# corellation_coeff_practical /= (np.sqrt(practical_dispersion_x) * np.sqrt(practical_dispersion_y))
+
+# print('\nCorellation coeff:')
+# print('theoretical', corellation_coeff_theoretical)
+# print('practical', corellation_coeff_practical)
 
 def check_intervals(non_offsetted_estimate_dispersion, math_estimate, real_dispersion, real_math_exp, dataset_len):
     gamma = 0.99
@@ -336,14 +336,14 @@ def check_corellation_interval(theoretical_corellation, practical_corellation, d
     else:
         print('Corellation expectations interval check verdict: not {} <= {} < {}, we are not in this range'.format(lower_bound, practical_corellation, upper_bound))
 
-print('\nX intervals')
-check_intervals(practical_dispersion_x, practical_math_e_x, theoretical_dispersion_x, theoretical_math_e_x, dataset_len)
+# print('\nX intervals')
+# check_intervals(practical_dispersion_x, practical_math_e_x, theoretical_dispersion_x, theoretical_math_e_x, dataset_len)
 
-print('\nY intervals')
-check_intervals(practical_dispersion_y, practical_math_e_y, theoretical_dispersion_y, theoretical_math_e_y, dataset_len)
+# print('\nY intervals')
+# check_intervals(practical_dispersion_y, practical_math_e_y, theoretical_dispersion_y, theoretical_math_e_y, dataset_len)
 
-print('\nCorellation')
-check_corellation_interval(corellation_coeff_theoretical, corellation_coeff_practical, dataset_len)
+# print('\nCorellation')
+# check_corellation_interval(corellation_coeff_theoretical, corellation_coeff_practical, dataset_len)
 
 
 ###############################################################################
@@ -368,10 +368,12 @@ norm_sum = 0
 for row in distribution: 
     for element in row:
         norm_sum += element
-        
+print(norm_sum)
+
 for j, row in enumerate(distribution):
     for i, element in enumerate(row):
         distribution[j][i] = element / norm_sum
+
 
 
 def discrete_function(j=None, i=None):
