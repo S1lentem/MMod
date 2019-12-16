@@ -1,10 +1,13 @@
 from math import sqrt
+from scipy.stats import chi2
 from generators import BaseRandomGeneretor
+
 
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 
+from lab2_1 import get_interval_assessment_D, get_interval_assessment_M
 
 DISTRIBUTION = [
           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -19,7 +22,6 @@ DISTRIBUTION = [
           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
           ]
 
-
 ALL_SUM = sum(sum(line) for line in DISTRIBUTION)
 
 N = 10_000
@@ -29,8 +31,6 @@ M2_THEORY = 0
 M3_THEORY = 0
 D1_THEORY = 0
 D2_THEORY = 0
-
-
 
 for i, line in enumerate(DISTRIBUTION):
     for j, val in enumerate(line):
@@ -49,15 +49,13 @@ for i in range(len(DISTRIBUTION)):
         D1_THEORY += DISTRIBUTION[i][j] * (j - M1_THEORY)**2
         D2_THEORY += DISTRIBUTION[i][j] * (i - M2_THEORY)**2
 
-
 COR = (M3_THEORY - M1_THEORY*M2_THEORY)/sqrt(D1_THEORY*D2_THEORY)
 
-
 class Generato2D:
-
     def __init__(self, distribution):
         self.__generator = BaseRandomGeneretor()
         self.__dist = distribution
+
 
     def __get_p(self, i=None, j=None):
         if i is None:
@@ -80,7 +78,7 @@ class Generato2D:
         acc = self.__get_p(i, j) / norm
         
         while y > acc:
-            j+=1
+            j += 1
             acc += self.__get_p(i, j) / norm
 
         return i, j
@@ -121,9 +119,30 @@ if __name__ == '__main__':
     print(f'D1) {D1_THEORY} ~ {d1}')
     print(f'D2) {D2_THEORY} ~ {d2}')
 
+    # cm11, cm12 = get_interval_assessment_M(m1, d1, len(values[0]))
+    # cm21, cm22 = get_interval_assessment_M(m2, d2, len(values[0]))
+
+    # dm11, dm12 = get_interval_assessment_D(m1, d1, len(values))
+    # dm21, dm22 = get_interval_assessment_D(m2, d2, len(values))
+
+    # print(f"{cm11} < {m1} < {cm12}")
+    # print(f"{cm21} < {m2} < {cm22}")
+
+    # print(f"{dm11} < {d1} < {dm12}")
+    # print(f"{dm21} < {d2} < {dm22}")
+
     cov = sum(val[0]*val[1] - m1*m2 for val in values) / N
     cor = sum((val[0]-m1)*(val[1]-m2) for val in values) / N / sqrt(d1*d2)
 
 
     print(f'cov) {cov}')
     print(f'cor) {cor} ~ {COR}')
+
+    chi2_val = 0
+    for i in range(len(values)):
+        e = sum(DISTRIBUTION[i])
+        o = [val[1] for val in values].count(i)
+
+        chi2_val += (o - e)**2/e 
+
+    print(f'Pirson) {chi2_val} < {chi2.ppf(0.99, 7)}')
